@@ -31,6 +31,6 @@
 
 #
 for FILE in `find $1 -name 'IMG_????.JPG'`
-do	x=`expr $x + 1`
+do	x=$((x+1))
 done
-printf $x
+printf $x" image files found."
