@@ -3,8 +3,8 @@
 #
 #Author: 40276179
 
-#iSource=$1
-#iDestination=$2
+#Clear Log Files
+> directories
 
 #User Argument Checks
 	#Check if the correct number of arguments have been entered
@@ -32,5 +32,6 @@
 #
 for FILE in `find $1 -name 'IMG_????.JPG'`
 do	x=$((x+1))
+		echo $FILE >> directories
 done
 printf $x" image files found."
