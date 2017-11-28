@@ -1,0 +1,36 @@
+#!/bin/sh
+#phar Photo Archiving Script
+#
+#Author: 40276179
+
+#iSource=$1
+#iDestination=$2
+
+#User Argument Checks
+	#Check if the correct number of arguments have been entered
+	if [ $# -ne 2 ]
+	then
+		printf "Correct usage: # phar source destination"
+		exit
+	fi
+
+	#Check if source exists
+	if [ ! -d  $1 ]
+	then
+		printf "The source directory does not exist"
+		exit
+	fi
+	
+	#Check if destination exists
+	if [ ! -d  $2 ]
+	then
+		printf "The archive directory does not exist"
+		exit
+	fi
+#---
+
+#
+for FILE in `find $1 -name 'IMG_????.JPG'`
+do	x=`expr $x + 1`
+done
+printf $x
