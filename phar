@@ -5,6 +5,7 @@
 
 #Clear Log Files
 > paths
+>duplicates
 
 #Reset Variables
 noFiles=0
@@ -33,7 +34,7 @@ noFiles=0
 #---
 
 #Find every file matching specified naming criteria in source directory.
-for FILE in `find $1 -name 'IMG_[0,1,2,3,4,5,6,7,8,9][0,1,2,3,4,5,6,7,8,9][0,1,2,3,4,5,6,7,8,9][0,1,2,3,4,5,6,7,8,9].JPG'`
+for FILE in `find $(pwd)/$1 -name 'IMG_[0,1,2,3,4,5,6,7,8,9][0,1,2,3,4,5,6,7,8,9][0,1,2,3,4,5,6,7,8,9][0,1,2,3,4,5,6,7,8,9].JPG'`
 do	noFiles=$((noFiles+1))
 		#write file paths to temporary file
 		echo $FILE >> paths
@@ -52,6 +53,7 @@ for path in `xargs <paths`
 do 	if [ -f  $2/`basename $path` ]	
 		then
 			printf "TEST"
+			echo $path >> duplicates
 		else
 			cp $path $2
 			printf "hmm"
