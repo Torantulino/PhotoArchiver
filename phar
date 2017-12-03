@@ -30,8 +30,7 @@ noUniques=0
 	#Check if destination exists
 	if [ ! -d  "$2" ]
 	then
-		printf "The archive directory does not exist"
-		exit
+		mkdir "$2"
 	fi
 #---
 
