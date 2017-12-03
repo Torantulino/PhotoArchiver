@@ -54,10 +54,21 @@ fi
 
 #For each file found
 for path in `xargs <paths`
+#If the file exists in the archive
 do 	if [ -f  "$2"/`basename $path` ]	
 		then
-			noDuplicates=$((noDuplicates+1))
-			echo $path >> duplicates
+			#Check if two content of two files is the same
+		    if diff "$2"/`basename $path`  $path  >/dev/null ;
+			then
+			#If so log as duplicate
+				noDuplicates=$((noDuplicates+1))
+				echo $path >> duplicates
+			else 
+			#Else rename and copy
+			cp -v $path "$2"/$"`basename $path`.JPG"
+			noUniques=$((noUniques+1))
+			fi
+		#else copy it
 		else
 			cp $path "$2"
 			noUniques=$((noUniques+1))
