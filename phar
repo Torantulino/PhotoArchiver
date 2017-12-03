@@ -30,6 +30,7 @@ noUniques=0
 	#Check if destination exists
 	if [ ! -d  "$2" ]
 	then
+	#If not create it
 		mkdir "$2"
 	fi
 #---
@@ -64,11 +65,11 @@ do 	if [ -f  "$2"/`basename $path` ]
 				echo $path >> duplicates
 			else 
 			#Else rename and copy
-			cp -v $path "$2"/$"`basename $path`.JPG"
+			cp  $path "$2"/$"`basename $path`.JPG"
 			noUniques=$((noUniques+1))
-			fi
-		#else copy it
+			fi	
 		else
+			#else copy it
 			cp $path "$2"
 			noUniques=$((noUniques+1))
 		fi
