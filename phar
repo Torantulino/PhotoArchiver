@@ -1,78 +1,65 @@
-#!/bin/sh
-#phar Photo Archiving Script
+#!/bin/bash
+# phar Photo Archiving Script
 #
-#Author: 40276179
+# Author: 40276179
 
-#Clear Log Files
+# Clear Log Files
 > paths
->duplicates
+> duplicates
 
-#Reset Variables
+# Reset Variables
 noFiles=0
 noDuplicates=0
 noUniques=0
 
-#User Argument Checks
-	#Check if the correct number of arguments have been entered
-	if [ $# -ne 2 ]
-	then
-		printf "Correct usage: # phar source destination"
-		exit
-	fi
-
-	#Check if source exists
-	if [ ! -d  "$1" ]
-	then
-		printf "The source directory does not exist"
-		exit
-	fi
-	
-	#Check if destination exists
-	if [ ! -d  "$2" ]
-	then
-	#If not create it
-		mkdir "$2"
-	fi
-#---
-
-#Find every file matching specified naming criteria in source directory.
-for FILE in `find "$1" -name 'IMG_[0,1,2,3,4,5,6,7,8,9][0,1,2,3,4,5,6,7,8,9][0,1,2,3,4,5,6,7,8,9][0,1,2,3,4,5,6,7,8,9].JPG'`
-do	noFiles=$((noFiles+1))
-		#find absolute path
-		absPath=`readlink -f $FILE`
-		#write file paths to temporary file
-		echo $absPath >> paths
-done
-
-#Print the number of files found to console
-if [ $noFiles -ne 0 ]
-then
-	printf $noFiles" files found matching specified criteria."
-else
-	printf "No files found matching specified criteria."
+# User Argument Checks
+# Check if the correct number of arguments have been entered
+if [ $# -ne 2 ]; then
+  printf "Correct usage: phar <SOURCE> <DESTINATION>"
+  exit 1
 fi
 
-#For each file found
-for path in `xargs <paths`
-#If the file exists in the archive
-do 	if [ -f  "$2"/`basename $path` ]	
-		then
-			#Check if two content of two files is the same
-		    if diff "$2"/`basename $path`  $path  >/dev/null ;
-			then
-			#If so log as duplicate
-				noDuplicates=$((noDuplicates+1))
-				echo $path >> duplicates
-			else 
-			#Else rename and copy
-			cp  $path "$2"/$"`basename $path`.JPG"
-			noUniques=$((noUniques+1))
-			fi	
-		else
-			#else copy it
-			cp $path "$2"
-			noUniques=$((noUniques+1))
-		fi
-done
+# Check if source exists
+if [ ! -d "$1" ]; then
+  printf "The source directory does not exist."
+  exit 1
+fi
 
-printf "\nProcess complete with "$noUniques" unique files copied and "$noDuplicates$" duplicates loged."
+# Check if destination exists, if not create it
+if [ ! -d "$2" ]; then
+  printf "The destination directory does not exist, creating it now...\n"
+  mkdir -p "$2"
+  printf "Destination directory created.\n"
+fi
+
+printf "Starting process...\n"
+# Find every file matching specified naming criteria in source directory.
+while IFS= read -r path; do
+  noFiles=$(($noFiles + 1))
+  # If the file exists in the archive
+  if [ -f "$2/$(basename "$path")" ]; then
+    # Check if two content of two files is the same
+    if diff -q "$2/$(basename "$path")" "$path" >/dev/null; then
+      # If so log as duplicate
+      noDuplicates=$(($noDuplicates + 1))
+      echo "$path" >> duplicates
+    else
+      # Else rename and copy
+      cp "$path" "$2/$(basename "$path" .JPG)_$(date +%s).JPG"
+      noUniques=$(($noUniques + 1))
+    fi
+  else
+    # Else copy it
+    cp "$path" "$2"
+    noUniques=$(($noUniques + 1))
+  fi
+done <<< $(find $1 | grep -E "IMG_[0-9]{4}\.JPG$")
+
+# Print the number of files found to console
+if [ $noFiles -ne 0 ]; then
+  printf "%d files found matching specified criteria.\n" "$noFiles"
+else
+  printf "No files found matching specified criteria.\n"
+fi
+
+printf "Process complete with %d unique files copied and %d duplicates logged.\n" "$noUniques" "$noDuplicates"
