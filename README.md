@@ -6,26 +6,27 @@ The "phar" script is a Bash script designed to help you organize and archive you
 
 To use the "phar" script, simply download the script file to your computer and make sure it has executable permissions. You can do this by running the following command in your terminal:
 
-´´´bash
+```bash
 chmod +x phar.sh
-´´´
+```
 
 ## Usage
 
 To use the "phar" script, simply run the script in your terminal and provide the source and destination directories as arguments. For example:
 
-´´´bash
+```bash
 ./phar.sh /path/to/source/directory /path/to/destination/directory
-´´´
+```
+
 The script will search for files in the source directory that match the naming convention "IMG_XXXX.JPG", where "XXXX" is a four-digit number. It will then copy these files to the destination directory, renaming them if necessary to avoid duplicates.
 
 ## Examples
 
 Here are some examples of how to use the "phar" script:
 
-´´´bash
+```bash
 ./phar.sh ~/Pictures /mnt/external/photos
-´´´
+```
 
 This will search for files in the "~/Pictures" directory that match the naming convention "IMG_XXXX.JPG" and copy them to the "/mnt/external/photos" directory.
 
